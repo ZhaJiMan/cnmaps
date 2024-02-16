@@ -69,10 +69,17 @@ def clip_contours_by_map(contours, map_polygon: MapPolygon, ax=None):
         >>> clip_contours_by_map(cs, map_polygon)
         >>> draw_map(map_polygon, color='k', linewidth=1)
     """
+    if ax is None:
+        ax = plt.gca()
     clip = _make_clip_path(map_polygon, ax=ax)
 
-    for contour in contours.collections:
-        contour.set_clip_path(clip)
+    if matplotlib.__version__ < '3.8.0':
+        for contour in contours.collections:
+            contour.set_clip_path(clip)
+            contour.set_clip_box(ax.bbox)
+    else:
+        contours.set_clip_path(clip)
+        contours.set_clip_box(ax.bbox)
 
 
 def clip_pcolormesh_by_map(mesh, map_polygon: MapPolygon, ax=None):
@@ -105,9 +112,12 @@ def clip_pcolormesh_by_map(mesh, map_polygon: MapPolygon, ax=None):
     >>> clip_pcolormesh_by_map(mesh, map_polygon)
     >>> draw_map(map_polygon, linewidth=1)
     """
+    if ax is None:
+        ax = plt.gca()
     clip = _make_clip_path(map_polygon, ax=ax)
 
     mesh.set_clip_path(clip)
+    mesh.set_clip_box(ax.bbox)
 
 
 def clip_quiver_by_map(quiver, map_polygon: MapPolygon, ax=None):
@@ -142,9 +152,12 @@ def clip_quiver_by_map(quiver, map_polygon: MapPolygon, ax=None):
     >>> clip_quiver_by_map(quiver, map_polygon)
     >>> draw_map(map_polygon, linewidth=1)
     """
+    if ax is None:
+        ax = plt.gca()
     clip = _make_clip_path(map_polygon, ax=ax)
 
     quiver.set_clip_path(clip)
+    quiver.set_clip_box(ax.bbox)
 
 
 def clip_scatter_by_map(scatter, map_polygon: MapPolygon, ax=None):
@@ -188,9 +201,12 @@ def clip_scatter_by_map(scatter, map_polygon: MapPolygon, ax=None):
     >>> clip_scatter_by_map(scatter, map_polygon)
     >>> draw_map(map_polygon, linewidth=1)
     """
+    if ax is None:
+        ax = plt.gca()
     clip = _make_clip_path(map_polygon, ax=ax)
 
     scatter.set_clip_path(clip)
+    scatter.set_clip_box(ax.bbox)
 
 
 def clip_clabels_by_map(
